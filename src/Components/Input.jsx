@@ -7,12 +7,14 @@ import { arrayUnion, updateDoc,doc, Timestamp, serverTimestamp } from "firebase/
 import{db,storage} from "../firebase"
 import{v4 as uuid} from "uuid";
 import { uploadBytesResumable,ref, getDownloadURL } from "firebase/storage";
+import Emoji from "./Emoji";
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const handleSend = async() => {
+      if(text===""&&img===null) return;
       if(img){
       const storageRef = ref(storage,uuid());
 

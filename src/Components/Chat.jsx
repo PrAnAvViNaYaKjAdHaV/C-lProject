@@ -4,6 +4,7 @@ import Add from "../img/add.png"
 import More from "../img/more.png"
 import Messages from './Messages'
 import Input from './Input'
+import Block from '../img/block.png'
 import { ChatContext } from '../context/ChatContext'
 const Chat = () => {
   const{data} = useContext(ChatContext);
@@ -14,7 +15,7 @@ const Chat = () => {
         <span>{data.user?.displayName}</span>
         <div className='chatIcons'>
           <img src={Cam} alt=""/>
-          <img src={Add} alt=""/>
+          <img src={Block} alt=""/>
           <img src={More} alt=""/>
         </div>
       </div>
