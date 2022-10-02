@@ -1,6 +1,6 @@
 import React from 'react'
-import Slidebar from '../Components/Slidebar'
-import Chat from '../Components/Chat'
+import Slidebar from '../Components/Slidebar/Slidebar'
+import Chat from '../Components/Chat/Chat'
 const Home = () => {
   return (
     <div className='home'>

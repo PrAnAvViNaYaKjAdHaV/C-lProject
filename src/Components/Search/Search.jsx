@@ -10,8 +10,9 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../firebase";
-import { AuthContext } from "../context/AuthContext";
+import { db } from "../../firebase";
+import { AuthContext } from "../../context/AuthContext";
+import './Search.style.scss'
 const Search = () => {
   const [userName, setUserName] = useState("");
   const [user, setUser] = useState("");

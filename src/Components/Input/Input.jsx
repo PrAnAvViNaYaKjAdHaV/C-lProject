@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { ChatContext } from "../context/ChatContext";
-import Img from "../img/img.png";
-import Attach from "../img/attach.png";
+import { AuthContext } from "../../context/AuthContext";
+import { ChatContext } from "../../context/ChatContext";
+import Img from "../../img/img.png";
+import Attach from "../../img/attach.png";
 import { arrayUnion, updateDoc,doc, Timestamp, serverTimestamp } from "firebase/firestore";
-import{db,storage} from "../firebase"
+import{db,storage} from "../../firebase"
 import{v4 as uuid} from "uuid";
 import { uploadBytesResumable,ref, getDownloadURL } from "firebase/storage";
+import './Input.style.scss'
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
@@ -20,7 +21,6 @@ const Input = () => {
 
       uploadTask.on(
         (error) => {
-          // setError(true);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
