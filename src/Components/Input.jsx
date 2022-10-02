@@ -3,22 +3,41 @@ import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
 import Img from "../img/img.png";
 import Attach from "../img/attach.png";
-import { arrayUnion, updateDoc,doc, Timestamp, serverTimestamp } from "firebase/firestore";
-import{db,storage} from "../firebase"
-import{v4 as uuid} from "uuid";
-import { uploadBytesResumable,ref, getDownloadURL } from "firebase/storage";
-import Emoji from "./Emoji";
+import {
+  arrayUnion,
+  updateDoc,
+  doc,
+  Timestamp,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db, storage } from "../firebase";
+import { v4 as uuid } from "uuid";
+import { uploadBytesResumable, ref, getDownloadURL } from "firebase/storage";
+import EmojiIcon from "../img/emoji1.png";
+import EmojiPicker from "emoji-picker-react";
+
+
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
+  const [emoji, setEmoji] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
-  const handleSend = async() => {
-      if(text===""&&img===null) return;
-      if(img){
-      const storageRef = ref(storage,uuid());
+  const Emoji = (props) => {
+    return props.tigger ? (
+      <div>
+        <EmojiPicker width={300} height={400} onEmojiClick={(props)=>setText((prev)=>prev+props.emoji)} />
+      </div>
+    ) : null;
+  };
 
-      const uploadTask = uploadBytesResumable(storageRef,img);
+
+  const handleSend = async () => {
+    if (text === "" && img === null) return;
+    if (img) {
+      const storageRef = ref(storage, uuid());
+
+      const uploadTask = uploadBytesResumable(storageRef, img);
 
       uploadTask.on(
         (error) => {
@@ -26,47 +45,45 @@ const Input = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            await updateDoc(doc(db,"chats",data.chatId),{
-              messages:arrayUnion({
-                 id:uuid(),
-                 text,
-                 senderId:currentUser.uid,
-                 date:Timestamp.now(),
-                 img:downloadURL
-              })
-             })
+            await updateDoc(doc(db, "chats", data.chatId), {
+              messages: arrayUnion({
+                id: uuid(),
+                text,
+                senderId: currentUser.uid,
+                date: Timestamp.now(),
+                img: downloadURL,
+              }),
+            });
           });
         }
       );
-    }else{
+    } else {
+      await updateDoc(doc(db, "chats", data.chatId), {
+        messages: arrayUnion({
+          id: uuid(),
+          text,
+          senderId: currentUser.uid,
+          date: Timestamp.now(),
+        }),
+      });
+    }
 
-       await updateDoc(doc(db,"chats",data.chatId),{
-        messages:arrayUnion({
-           id:uuid(),
-           text,
-           senderId:currentUser.uid,
-           date:Timestamp.now(),
-        })
-       })
-      }
-
-    await updateDoc(doc(db,"userChats",currentUser.uid),{
-       [data.chatId+".lastMessage"]:{
-        text
-       },
-       [data.chatId+".date"]:serverTimestamp()
-    })
-
-    await updateDoc(doc(db,"userChats",data.user.uid),{
-      [data.chatId+".lastMessage"]:{
-       text
+    await updateDoc(doc(db, "userChats", currentUser.uid), {
+      [data.chatId + ".lastMessage"]: {
+        text,
       },
-      [data.chatId+".date"]:serverTimestamp()
-   })
+      [data.chatId + ".date"]: serverTimestamp(),
+    });
 
-    setText("")
-    setImg(null)
-    
+    await updateDoc(doc(db, "userChats", data.user.uid), {
+      [data.chatId + ".lastMessage"]: {
+        text,
+      },
+      [data.chatId + ".date"]: serverTimestamp(),
+    });
+
+    setText("");
+    setImg(null);
   };
   return (
     <div className="input">
@@ -76,6 +93,7 @@ const Input = () => {
         onChange={(e) => setText(e.target.value)}
         value={text}
       />
+
       <div className="send">
         <img src={Attach} alt="" />
         <input
@@ -84,9 +102,19 @@ const Input = () => {
           id="file"
           onChange={(e) => setImg(e.target.files[0])}
         />
+
         <label htmlFor="file">
           <img src={Img} alt="" />
         </label>
+
+        <span id="emoji">
+          <Emoji tigger={emoji} />
+        </span>
+
+        <label htmlFor="emoji" onClick={() => setEmoji(!emoji)}>
+          <img src={EmojiIcon} alt="emojiIcon" />
+        </label>
+
         <button onClick={handleSend}>Send</button>
       </div>
     </div>
