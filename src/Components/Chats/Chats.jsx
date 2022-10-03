@@ -37,8 +37,8 @@ const Chats = () => {
                 <span>{chat[1].userInfo.displayName}</span>
                 <p>
                   {chat[1].lastMessage?.text.length > 5
-                    ? chat[1].lastMessage.text.substring(0, 5)+'...'
-                    : chat[1].lastMessage.text}
+                    ? chat[1].lastMessage?.text.substring(0, 5)+'...'
+                    : chat[1].lastMessage?.text}
                 </p>
               </div>
             </div>
