@@ -14,7 +14,7 @@ const Input = () => {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
   const handleSend = async() => {
-      if(text === "") return;
+      if(text === "" && img === null) return;
       if(img){
       const storageRef = ref(storage,uuid());
 
