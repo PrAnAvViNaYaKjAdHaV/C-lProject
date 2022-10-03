@@ -27,7 +27,7 @@ const Message = ({ message }) => {
         <span></span>
       </div>
       <div className="messageContent">
-        <p>{message.text}</p>
+        <p>{message.img && !message.text?"img":message.text}</p>
         {message.img && <img src={message.img} alt="" />}
       </div>
     </div>
